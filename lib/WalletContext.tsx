@@ -2,7 +2,7 @@ import {
   transact,
   Web3MobileWallet,
 } from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
-import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { createContext, useContext, useState } from "react";
 
 const APP_IDENTITY = {
@@ -16,7 +16,6 @@ type WalletContextType = {
   disconnectWallet: () => Promise<void>;
   publicKey: string | null;
   authToken: string | null;
-  getBalance: () => Promise<number | undefined>;
 };
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -67,23 +66,11 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const getBalance = async () => {
-    const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-    try {
-      if (!publicKey) return;
-      const balance = await connection.getBalance(new PublicKey(publicKey));
-      return balance / 1e9;
-    } catch (err) {
-      console.log("Error occured while fetching balance");
-    }
-  };
-
   return (
     <WalletContext.Provider
       value={{
         connectWallet,
         disconnectWallet,
-        getBalance,
         publicKey,
         authToken,
       }}
