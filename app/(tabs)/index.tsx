@@ -30,21 +30,21 @@ export default function Index() {
         console.log("Error", err);
       }
     }
-    fetchDataForWallet();
+    // fetchDataForWallet();
   }, [publicKey]);
 
-  if (!authToken) {
-    return (
-      <View style={s.emptyState}>
-        <TouchableOpacity style={s.connectBtn} onPress={connectWallet}>
-          <Text style={s.btnText}>Connect</Text>
-        </TouchableOpacity>
-        <Text style={s.subHeading}>
-          Connect your wallet to add contacts and send sol
-        </Text>
-      </View>
-    );
-  }
+  // if (!authToken) {
+  //   return (
+  //     <View style={s.emptyState}>
+  //       <TouchableOpacity style={s.connectBtn} onPress={connectWallet}>
+  //         <Text style={s.btnText}>Connect</Text>
+  //       </TouchableOpacity>
+  //       <Text style={s.subHeading}>
+  //         Connect your wallet to add contacts and send sol
+  //       </Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={s.container}>
