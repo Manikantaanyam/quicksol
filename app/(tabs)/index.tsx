@@ -2,11 +2,14 @@ import { useWallet } from "@/lib/WalletContext";
 import { getBalance } from "@/src/solana/balance";
 import { getTransactions } from "@/src/solana/transactionsHistory";
 import { AntDesign } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Auth from "../auth";
 
 export default function Index() {
-  const { connectWallet, disconnectWallet, publicKey, authToken } = useWallet();
+  const { disconnectWallet, publicKey, authToken } = useWallet();
+  const router = useRouter();
 
   const [bal, setBal] = useState<number | undefined>(0);
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -33,18 +36,9 @@ export default function Index() {
     // fetchDataForWallet();
   }, [publicKey]);
 
-  // if (!authToken) {
-  //   return (
-  //     <View style={s.emptyState}>
-  //       <TouchableOpacity style={s.connectBtn} onPress={connectWallet}>
-  //         <Text style={s.btnText}>Connect</Text>
-  //       </TouchableOpacity>
-  //       <Text style={s.subHeading}>
-  //         Connect your wallet to add contacts and send sol
-  //       </Text>
-  //     </View>
-  //   );
-  // }
+  if (!publicKey) {
+    return <Auth />;
+  }
 
   return (
     <View style={s.container}>
@@ -52,6 +46,7 @@ export default function Index() {
         <Text
           style={s.btnText}
         >{`${publicKey?.slice(0, 4)}....${publicKey?.slice(-4)}`}</Text>
+
         <AntDesign name="disconnect" color="#fff" size={20} />
       </TouchableOpacity>
 
@@ -68,22 +63,11 @@ export default function Index() {
 }
 
 const s = StyleSheet.create({
-  emptyState: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   container: {
     flex: 1,
     paddingHorizontal: 18,
     paddingVertical: 40,
     backgroundColor: "#000",
-  },
-  connectBtn: {
-    backgroundColor: "#1d6ff3",
-    padding: 14,
-    paddingHorizontal: 20,
-    borderRadius: 10,
   },
   disconnectBtn: {
     backgroundColor: "#37b825",
@@ -98,12 +82,6 @@ const s = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
     letterSpacing: 0.8,
-  },
-  subHeading: {
-    marginTop: 10,
-    opacity: 0.6,
-    maxWidth: 250,
-    textAlign: "center",
   },
   balanceContainer: {
     borderWidth: 1,

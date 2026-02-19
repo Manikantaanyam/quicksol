@@ -1,7 +1,8 @@
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { Text } from "react-native";
 
-export default function RootLayout() {
+export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
@@ -12,8 +13,8 @@ export default function RootLayout() {
           shadowOpacity: 0,
           backgroundColor: "#000",
         },
-        tabBarActiveTintColor: "#60da4e",
-        tabBarInactiveTintColor: "#f2fdf0",
+        tabBarActiveTintColor: "#9C46EC",
+        tabBarInactiveTintColor: "#94969E",
       }}
     >
       <Tabs.Screen
@@ -21,7 +22,18 @@ export default function RootLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (
-            <AntDesign name="home" color={color} size={size} />
+            <Ionicons name="home" color={color} size={size} />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                marginTop: 4,
+                color: focused ? "#fff" : "#94969E",
+                fontSize: 12,
+              }}
+            >
+              Home
+            </Text>
           ),
         }}
       />
@@ -29,9 +41,20 @@ export default function RootLayout() {
       <Tabs.Screen
         name="pay"
         options={{
-          title: "pay",
+          title: "Pay",
           tabBarIcon: ({ color, size }) => (
-            <AntDesign name="send" color={color} size={size} />
+            <Ionicons name="send" color={color} size={size} />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                marginTop: 4,
+                color: focused ? "#fff" : "#94969E",
+                fontSize: 12,
+              }}
+            >
+              Send
+            </Text>
           ),
         }}
       />
@@ -39,9 +62,20 @@ export default function RootLayout() {
       <Tabs.Screen
         name="activity"
         options={{
-          title: "history",
+          title: "History",
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="history" color={color} size={size} />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                marginTop: 4,
+                color: focused ? "#fff" : "#94969E",
+                fontSize: 12,
+              }}
+            >
+              History
+            </Text>
           ),
         }}
       />
