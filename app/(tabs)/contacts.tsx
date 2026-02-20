@@ -1,10 +1,10 @@
 import { StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ActivityScreen() {
+export default function ContactsScreen() {
   return (
     <SafeAreaView style={s.container}>
-      <Text style={{ color: "#fff" }}>Activity screen</Text>
+      <Text style={{ color: "#fff" }}>Contacts screen</Text>
     </SafeAreaView>
   );
 }

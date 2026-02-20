@@ -1,4 +1,4 @@
-import { useWallet, WalletProvider } from "@/lib/WalletContext";
+import { WalletProvider } from "@/lib/WalletContext";
 import "../src/polyfill";
 
 import { Stack } from "expo-router";
@@ -8,8 +8,8 @@ export default function RootLayout() {
   return (
     <WalletProvider>
       <SafeAreaProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
         </Stack>
       </SafeAreaProvider>
     </WalletProvider>

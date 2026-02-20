@@ -1,21 +1,19 @@
 import { useWallet } from "@/lib/WalletContext";
+import { Contacts } from "@/src/components/NoContacts";
 import { getBalance } from "@/src/solana/balance";
 import { getTransactions } from "@/src/solana/transactionsHistory";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Auth from "../auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const { disconnectWallet, publicKey, authToken } = useWallet();
+  const { disconnectWallet, publicKey } = useWallet();
   const router = useRouter();
 
   const [bal, setBal] = useState<number | undefined>(0);
   const [transactions, setTransactions] = useState<any[]>([]);
-
-  console.log("Address", publicKey);
-  console.log("authtoken", authToken);
 
   useEffect(() => {
     if (!publicKey) return;
@@ -28,37 +26,65 @@ export default function Index() {
 
         setBal(balance);
         setTransactions(transactions);
-        console.log("transactions", transactions);
       } catch (err) {
         console.log("Error", err);
       }
     }
-    // fetchDataForWallet();
   }, [publicKey]);
 
-  if (!publicKey) {
-    return <Auth />;
-  }
-
   return (
-    <View style={s.container}>
-      <TouchableOpacity style={s.disconnectBtn} onPress={disconnectWallet}>
-        <Text
-          style={s.btnText}
-        >{`${publicKey?.slice(0, 4)}....${publicKey?.slice(-4)}`}</Text>
+    <SafeAreaView style={s.container}>
+      <View>
+        <View style={s.headerRow}>
+          <View style={s.profileSection}>
+            <View style={s.avatar}>
+              <Text style={s.avatarText}>N</Text>
+            </View>
+            <View>
+              <Text style={s.username}>No username</Text>
+              <Text style={s.walletAddress}>
+                {`${publicKey?.slice(0, 4)}....${publicKey?.slice(-4)}`}
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity style={s.disconnectBtn} onPress={disconnectWallet}>
+            <AntDesign name="disconnect" color="#e5e7eb" size={20} />
+          </TouchableOpacity>
+        </View>
 
-        <AntDesign name="disconnect" color="#fff" size={20} />
-      </TouchableOpacity>
+        <View style={s.balanceContainer}>
+          <Text style={s.balanceTag}>Total Balance</Text>
+          <View style={s.balanceRow}>
+            <Text style={s.balance}>{bal ? bal : "12.435"}</Text>
+            <Text style={s.solTag}>SOL</Text>
+          </View>
 
-      <View style={s.balanceContainer}>
-        <Text style={s.balanceTag}>SOL BALANCE</Text>
-        <Text style={s.balance}>{bal}</Text>
-        <Text style={s.solTag}>SOL</Text>
-        <Text
-          style={s.publickey}
-        >{`${publicKey?.slice(0, 8)}....${publicKey?.slice(-8)}`}</Text>
+          <View style={s.actionRow}>
+            <TouchableOpacity style={s.sendButton}>
+              <Feather name="send" size={20} color="#fff" />
+              <Text style={s.actionText}>Send</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={s.receiveButton}>
+              <Feather name="download" size={20} color="#fff" />
+              <Text style={s.actionText}>Receive</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+
+      <View style={s.contactsHeader}>
+        <Text style={s.contactsTitle}>Contacts</Text>
+        <View style={s.addContactRow}>
+          <AntDesign name="user-add" size={20} color="#9C46EC" />
+          <Text style={s.addContactText}>Add new</Text>
+        </View>
+      </View>
+
+      <View>
+        <Contacts />
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -67,36 +93,64 @@ const s = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 18,
     paddingVertical: 40,
-    backgroundColor: "#000",
+    backgroundColor: "#0b0f1a",
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  profileSection: {
+    flexDirection: "row",
+    gap: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 999,
+    backgroundColor: "#9C46EC",
+  },
+  avatarText: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "500",
+  },
+  username: {
+    color: "#fff",
+  },
+  walletAddress: {
+    color: "#9ca3af",
+    letterSpacing: 0.5,
   },
   disconnectBtn: {
-    backgroundColor: "#37b825",
+    backgroundColor: "#141A2A",
     padding: 14,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-    flexDirection: "row",
+    borderRadius: 999,
     gap: 10,
     alignSelf: "flex-end",
   },
-  btnText: {
-    color: "#fff",
-    fontSize: 14,
-    letterSpacing: 0.8,
-  },
   balanceContainer: {
     borderWidth: 1,
-    borderColor: "#e2fbdd",
+    borderColor: "#1f2837",
     borderRadius: 30,
     padding: 16,
     paddingVertical: 32,
     marginTop: 40,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#121625",
   },
   balanceTag: {
-    color: "#c4f5bd",
+    color: "#9ca3af",
     fontSize: 18,
     letterSpacing: 0.9,
+  },
+  balanceRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 8,
   },
   balance: {
     fontSize: 38,
@@ -107,22 +161,62 @@ const s = StyleSheet.create({
   },
   solTag: {
     color: "#c4f5bd",
-    textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
     letterSpacing: 1.2,
-    marginTop: 10,
   },
-  publickey: {
-    color: "#247d18",
-    letterSpacing: 1.2,
-    borderWidth: 1,
-    borderColor: "#fff",
-    padding: 4,
-    paddingHorizontal: 10,
-    backgroundColor: "#f2fdf0",
+  actionRow: {
+    marginTop: 30,
+    flexDirection: "row",
+    gap: 10,
+  },
+  sendButton: {
+    backgroundColor: "#9C46EC",
+    width: 150,
+    height: 60,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 16,
+    flexDirection: "row",
+    gap: 8,
+  },
+  receiveButton: {
+    backgroundColor: "#292C3B",
+    width: 150,
+    height: 60,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 16,
+    flexDirection: "row",
+    gap: 8,
+  },
+  actionText: {
+    color: "#fff",
     fontWeight: "bold",
-    borderRadius: 10,
-    marginTop: 10,
+    fontSize: 18,
+  },
+  contactsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 40,
+    paddingHorizontal: 16,
+  },
+  contactsTitle: {
+    fontSize: 20,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  addContactRow: {
+    flexDirection: "row",
+    gap: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addContactText: {
+    color: "#9C46EC",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

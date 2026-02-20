@@ -1,9 +1,18 @@
 import { useWallet } from "@/lib/WalletContext";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Auth() {
-  const { connectWallet } = useWallet();
+  const { connectWallet, publicKey } = useWallet();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (publicKey) {
+      router.replace("/(tabs)");
+    }
+  }, [publicKey]);
 
   return (
     <View style={s.emptyState}>

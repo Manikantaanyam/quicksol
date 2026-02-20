@@ -23,7 +23,6 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [publicKey, setPublicKey] = useState<string | null>(null);
-  const [isConnecting, setIsConnecting] = useState<boolean>(false);
 
   const connectWallet = async () => {
     try {
@@ -41,6 +40,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       );
       const pubKey = new PublicKey(addressBytes);
       const base58Address = pubKey.toBase58();
+      console.log("base58", base58Address);
 
       setPublicKey(base58Address);
     } catch (err) {

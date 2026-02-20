@@ -1,8 +1,15 @@
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { useWallet } from "@/lib/WalletContext";
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import { Redirect, Tabs } from "expo-router";
 import { Text } from "react-native";
 
 export default function TabsLayout() {
+  const { publicKey } = useWallet();
+
+  if (!publicKey) {
+    return <Redirect href="/auth" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -11,7 +18,7 @@ export default function TabsLayout() {
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
-          backgroundColor: "#000",
+          backgroundColor: "#0b0f1a",
         },
         tabBarActiveTintColor: "#9C46EC",
         tabBarInactiveTintColor: "#94969E",
@@ -43,7 +50,7 @@ export default function TabsLayout() {
         options={{
           title: "Pay",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="send" color={color} size={size} />
+            <Feather name="send" size={size} color={color} />
           ),
           tabBarLabel: ({ focused }) => (
             <Text
@@ -54,6 +61,27 @@ export default function TabsLayout() {
               }}
             >
               Send
+            </Text>
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="contacts"
+        options={{
+          title: "Contacts",
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="user-add" size={size} color={color} />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                marginTop: 4,
+                color: focused ? "#fff" : "#94969E",
+                fontSize: 12,
+              }}
+            >
+              Contacts
             </Text>
           ),
         }}

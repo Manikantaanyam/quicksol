@@ -12,7 +12,7 @@ export default function PayScreen() {
 const s = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#0b0f1a",
     paddingHorizontal: 16,
     paddingVertical: 40,
   },
