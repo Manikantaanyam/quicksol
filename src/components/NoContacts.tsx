@@ -16,7 +16,6 @@ export function Contacts() {
   );
 }
 
-
 const s = StyleSheet.create({
   emptyStateContainer: {
     justifyContent: "center",

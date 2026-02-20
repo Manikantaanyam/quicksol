@@ -1,5 +1,6 @@
+import { useWallet } from "@/lib/WalletContext";
 import { AntDesign } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   StyleSheet,
@@ -11,7 +12,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export function UserName() {
-  const [userName, setUserName] = useState<string | null>(null);
+  const [input, setInput] = useState<string | null>("");
+  const { skipUsername, username, setUsername } = useWallet();
+  const router = useRouter();
 
   return (
     <SafeAreaView style={s.container}>
@@ -24,7 +27,7 @@ export function UserName() {
       <View style={s.inputGroup}>
         <Text style={s.label}>Username</Text>
         <TextInput
-          onChangeText={setUserName}
+          onChangeText={setInput}
           placeholder="@ your username"
           placeholderTextColor="#6b7280"
           style={s.input}
@@ -32,15 +35,25 @@ export function UserName() {
       </View>
 
       <View style={s.buttonGroup}>
-        <TouchableOpacity style={s.primaryButton}>
+        <TouchableOpacity
+          style={s.primaryButton}
+          onPress={() => {
+            setUsername(input);
+            router.replace("/(tabs)");
+          }}
+        >
           <Text style={s.primaryButtonText}>Create username</Text>
         </TouchableOpacity>
 
-        <Link href="/">
-          <TouchableOpacity style={s.secondaryButton}>
-            <Text style={s.secondaryButtonText}>I'll do this later</Text>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity
+          style={s.secondaryButton}
+          onPress={() => {
+            skipUsername();
+            router.replace("/(tabs)");
+          }}
+        >
+          <Text style={s.secondaryButtonText}>I'll do this later</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={s.infoCard}>

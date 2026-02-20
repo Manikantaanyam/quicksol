@@ -16,6 +16,10 @@ type WalletContextType = {
   disconnectWallet: () => Promise<void>;
   publicKey: string | null;
   authToken: string | null;
+  username: string | null;
+  setUsername: (name: string | null) => void;
+  hasSkippedUsername: boolean;
+  skipUsername: () => void;
 };
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -23,6 +27,12 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [publicKey, setPublicKey] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [hasSkippedUsername, setHasSkippedUsername] = useState(false);
+
+  const skipUsername = () => {
+    setHasSkippedUsername(true);
+  };
 
   const connectWallet = async () => {
     try {
@@ -60,6 +70,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
       setAuthToken(null);
       setPublicKey(null);
+      setUsername(null);
+      setHasSkippedUsername(false);
 
       console.log("Disconnected successfully");
     } catch (err) {
@@ -74,6 +86,10 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         disconnectWallet,
         publicKey,
         authToken,
+        username,
+        hasSkippedUsername,
+        setUsername,
+        skipUsername,
       }}
     >
       {children}

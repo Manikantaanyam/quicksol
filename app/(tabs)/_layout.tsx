@@ -1,13 +1,22 @@
 import { useWallet } from "@/lib/WalletContext";
+import { UserName } from "@/src/components/UserName";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { Text } from "react-native";
 
 export default function TabsLayout() {
-  const { publicKey } = useWallet();
+  const { publicKey, username, hasSkippedUsername } = useWallet();
 
   if (!publicKey) {
     return <Redirect href="/auth" />;
+  }
+
+  if (publicKey && !username && !hasSkippedUsername) {
+    return (
+      <>
+        <UserName />
+      </>
+    );
   }
 
   return (

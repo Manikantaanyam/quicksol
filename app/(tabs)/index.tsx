@@ -9,7 +9,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const { disconnectWallet, publicKey } = useWallet();
+  const { disconnectWallet, publicKey, username } = useWallet();
   const router = useRouter();
 
   const [bal, setBal] = useState<number | undefined>(0);
@@ -38,10 +38,14 @@ export default function Index() {
         <View style={s.headerRow}>
           <View style={s.profileSection}>
             <View style={s.avatar}>
-              <Text style={s.avatarText}>N</Text>
+              <Text style={s.avatarText}>
+                {username ? username[0].toUpperCase() : "A"}
+              </Text>
             </View>
             <View>
-              <Text style={s.username}>No username</Text>
+              <Text style={s.username}>
+                {username ? username : "No username"}
+              </Text>
               <Text style={s.walletAddress}>
                 {`${publicKey?.slice(0, 4)}....${publicKey?.slice(-4)}`}
               </Text>
@@ -162,7 +166,7 @@ const s = StyleSheet.create({
   solTag: {
     color: "#f3e8ff",
     fontSize: 20,
-    opacity:0.6,
+    opacity: 0.6,
     fontWeight: "bold",
     letterSpacing: 1.2,
   },
