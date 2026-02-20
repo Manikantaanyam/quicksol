@@ -16,11 +16,14 @@ export default function Auth() {
 
   return (
     <View style={s.emptyState}>
-      <Text style={s.heading}>Connect your Solana wallet</Text>
+      <Text style={s.heading}>Your Solana Contact Book</Text>
 
-      <Text style={s.subHeading}>
-        Send tokens to your friends using their names instead of long addresses.
-      </Text>
+      <View>
+        <Text style={s.subHeading}>Save wallet addresses as contacts.</Text>
+        <Text style={s.subHeading}>
+          Access them from any wallet using your username.
+        </Text>
+      </View>
 
       <TouchableOpacity style={s.connectBtn} onPress={connectWallet}>
         <Text style={s.btnText}>Connect</Text>
@@ -59,6 +62,7 @@ const s = StyleSheet.create({
     borderRadius: 10,
     alignSelf: "flex-start",
     width: "100%",
+    marginTop: 20,
   },
   btnText: {
     color: "#fff",

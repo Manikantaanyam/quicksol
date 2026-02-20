@@ -160,8 +160,9 @@ const s = StyleSheet.create({
     textAlign: "center",
   },
   solTag: {
-    color: "#c4f5bd",
+    color: "#f3e8ff",
     fontSize: 20,
+    opacity:0.6,
     fontWeight: "bold",
     letterSpacing: 1.2,
   },
