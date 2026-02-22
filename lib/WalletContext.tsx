@@ -26,7 +26,9 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [authToken, setAuthToken] = useState<string | null>(null);
-  const [publicKey, setPublicKey] = useState<string | null>(null);
+  const [publicKey, setPublicKey] = useState<string | null>(
+    "86xCnPeV69n6t3DnyGvkKobf9FdN2H9oiVDdaMpo2MMY",
+  );
   const [username, setUsername] = useState<string | null>(null);
   const [hasSkippedUsername, setHasSkippedUsername] = useState(false);
 

@@ -29,7 +29,10 @@ export default function Index() {
       } catch (err) {
         console.log("Error", err);
       }
+      console.log("transactions ==> ", transactions);
     }
+
+    fetchDataForWallet();
   }, [publicKey]);
 
   return (
