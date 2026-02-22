@@ -73,7 +73,7 @@ function filterPeerToPeerTransactions(transactions: any, walletAddress: any) {
 export async function getTransactions(address: string) {
   try {
     const response = await fetch(
-      `https://api-mainnet.helius-rpc.com/v0/addresses/${address}/transactions/?api-key=${process.env.EXPO_PUBLIC_HELIUS_API_KEY}&limit=50`,
+      `https://api-mainnet.helius-rpc.com/v0/addresses/${address}/transactions/?api-key=${process.env.EXPO_PUBLIC_HELIUS_API_KEY}&limit=80`,
     );
 
     if (!response.ok) {
@@ -81,27 +81,93 @@ export async function getTransactions(address: string) {
     }
 
     const data = await response.json();
+    console.log("data ==> ", data);
 
-    const filtered_transactions = filterPeerToPeerTransactions(data, address);
+    const filteredTransactions = filterPeerToPeerTransactions(data, address);
 
-    const uniqueMintAddresses = new Set(); // unique mint addresses of tokens to fetch metadata
-    filtered_transactions.forEach((tx: any) => {
+    const uniqueMintAddresses = new Set<string>();
+
+    filteredTransactions.forEach((tx: any) => {
       tx.tokenTransfers?.forEach((t: any) => {
-        if (t.mint) {
-          uniqueMintAddresses.add(t.mint);
-        }
+        if (t.mint) uniqueMintAddresses.add(t.mint);
       });
     });
 
-    console.log("mint_Addr => ", uniqueMintAddresses);
-    const mintArray: any[] = Array.from(uniqueMintAddresses);
-    const mintAddressMetadata = await getMintMetadata(mintArray);
-    console.log("mintAddressMetadata ==> ", mintAddressMetadata);
+    const mintArray = Array.from(uniqueMintAddresses);
 
-    console.log("filtered_transactions ==> ", filtered_transactions);
-    console.log("filtered_transactions_length ==> ", filtered_transactions.length);
+    let metadataMap: Record<string, any> = {};
 
-    return filtered_transactions;
+    if (mintArray.length > 0) {
+      const mintMetadata = await getMintMetadata(mintArray);
+
+      mintMetadata.forEach((asset: any) => {
+        const mint = asset.id;
+
+        metadataMap[mint] = {
+          image: asset?.content?.links?.image || null,
+          symbol: asset?.content?.metadata?.symbol || null,
+          decimals: asset?.token_info?.decimals ?? null,
+        };
+      });
+    }
+
+    const SOL_METADATA = {
+      image:
+        "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      symbol: "SOL",
+      decimals: 9,
+    };
+
+    const simplifiedTransactions = filteredTransactions.map((tx: any) => {
+      const native = tx.nativeTransfers?.[0];
+      const token = tx.tokenTransfers?.[0];
+
+      const transfer = native || token;
+
+      const isIncoming = transfer.toUserAccount === address;
+
+      const baseData = {
+        movement: isIncoming ? "incoming" : "outgoing",
+        fromUserAccount: transfer.fromUserAccount,
+        toUserAccount: transfer.toUserAccount,
+        signature: tx.signature,
+        timestamp: tx.timestamp,
+        networkFee: Number(tx.fee) / 1e9,
+      };
+
+      if (native) {
+        const lamports = native.amount;
+        const solAmount = lamports / 1_000_000_000;
+        return {
+          ...baseData,
+          asset: "SOL",
+          amount: solAmount,
+          metadata: SOL_METADATA,
+        };
+      }
+
+      if (token) {
+        const mint = token.mint;
+        const tokenAmount = token.tokenAmount;
+
+        return {
+          ...baseData,
+          asset: token.mint,
+          amount: tokenAmount,
+          metadata: metadataMap[token.mint] || null,
+        };
+      }
+
+      return null;
+    });
+
+    console.log("simplified transactions => ", simplifiedTransactions);
+    console.log(
+      "simplified transactions length => ",
+      simplifiedTransactions.length,
+    );
+
+    return simplifiedTransactions.filter(Boolean);
   } catch (error) {
     console.error("Helius fetch error:", error);
     throw error;
