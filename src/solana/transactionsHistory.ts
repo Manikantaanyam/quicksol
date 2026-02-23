@@ -73,7 +73,7 @@ function filterPeerToPeerTransactions(transactions: any, walletAddress: any) {
 export async function getTransactions(address: string) {
   try {
     const response = await fetch(
-      `https://api-mainnet.helius-rpc.com/v0/addresses/${address}/transactions/?api-key=${process.env.EXPO_PUBLIC_HELIUS_API_KEY}&limit=80`,
+      `https://api-mainnet.helius-rpc.com/v0/addresses/${address}/transactions/?api-key=${process.env.EXPO_PUBLIC_HELIUS_API_KEY}&type=TRANSFER&limit=80`,
     );
 
     if (!response.ok) {
