@@ -32,7 +32,7 @@ export default function Index() {
       console.log("transactions ==> ", transactions);
     }
 
-    fetchDataForWallet();
+    // fetchDataForWallet();
   }, [publicKey]);
 
   return (
