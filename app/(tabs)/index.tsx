@@ -1,4 +1,5 @@
 import { useWallet } from "@/lib/WalletContext";
+import { AddContact } from "@/src/components/AddContact";
 import { Contacts } from "@/src/components/NoContacts";
 import { getBalance } from "@/src/solana/balance";
 import { getTransactions } from "@/src/solana/transactionsHistory";
@@ -14,6 +15,7 @@ export default function Index() {
 
   const [bal, setBal] = useState<number | undefined>(0);
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (!publicKey) return;
@@ -82,15 +84,25 @@ export default function Index() {
 
       <View style={s.contactsHeader}>
         <Text style={s.contactsTitle}>Contacts</Text>
-        <View style={s.addContactRow}>
+        <TouchableOpacity
+          style={s.addContactRow}
+          onPress={() => setModalVisible((p) => !p)}
+        >
           <AntDesign name="user-add" size={20} color="#9C46EC" />
           <Text style={s.addContactText}>Add new</Text>
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View>
         <Contacts />
       </View>
+
+      {modalVisible && (
+        <AddContact
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
+      )}
     </SafeAreaView>
   );
 }
